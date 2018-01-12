@@ -1,7 +1,3 @@
-// Copyright 2013 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
-
 package main
 
 import (
@@ -12,9 +8,11 @@ import (
 
 func main() {
 	t := trie.New()
-	t.Insert("test")
+	t.Insert("ab")
 
-	e := t.Find("test")
+	t.Dump()
+
+	e := t.Find("ab")
 	if e != nil {
 		fmt.Println("find")
 	} else {

@@ -1,7 +1,9 @@
 package trie
 
 import (
+	"fmt"
 	"log"
+	"strings"
 )
 
 // Element is an element of tree node.
@@ -29,9 +31,23 @@ type Element struct {
 	Value interface{}
 }
 
+// Init initializes or clears element e.
+func (e *Element) Init() *Element {
+	e.c = make(map[byte]*Element)
+	return e
+}
+
+// NewElement returns an initialized element.
+func NewElement() *Element {
+	return new(Element).Init()
+}
+
 // addChildrenWithByte add one children to element e, and return the children.
 func (e *Element) addChildrenWithByte(b byte) *Element {
-	children := &Element{trie: e.trie, p: e, b: b}
+	children := NewElement()
+	children.trie = e.trie
+	children.p = e
+	children.b = b
 	e.c[b] = children
 	return children
 }
@@ -44,13 +60,14 @@ func (e *Element) addChildrenWithElement(children *Element) *Element {
 
 // Trie implement a trie tree.
 type Trie struct {
-	root Element
+	root *Element
 }
 
 // Init initializes or clears trie tree t.
 func (t *Trie) Init() *Trie {
+	t.root = NewElement()
 	t.root.trie = t
-	t.root.p = &t.root
+	t.root.p = t.root
 	return t
 }
 
@@ -61,22 +78,27 @@ func New() *Trie {
 
 // Insert insert key into trie tree.
 func (t *Trie) Insert(key string) *Element {
-	return t.insertKey(key)
+	return t.insertKey(strings.TrimSpace(key))
 }
 
 // Find find key in trie tree. If not found return nil.
 func (t *Trie) Find(key string) *Element {
-	return t.find(0, []byte(key), &t.root)
+	return t.find(0, []byte(key), t.root)
 }
 
 // insertKey insert key into trie tree.
 func (t *Trie) insertKey(key string) *Element {
-	return t.insert(0, &Element{key: []byte(key)}, &t.root)
+	e := NewElement()
+	e.key = []byte(key)
+	return t.insert(0, e, t.root)
 }
 
 // insertKeyValue insert key with value v into trie tree.
 func (t *Trie) insertKeyValue(key string, v interface{}) *Element {
-	return t.insert(0, &Element{key: []byte(key), Value: v}, &t.root)
+	e := NewElement()
+	e.key = []byte(key)
+	e.Value = v
+	return t.insert(0, e, t.root)
 }
 
 // insert insert an element e into trie tree. i is index of key.
@@ -87,9 +109,10 @@ func (t *Trie) insert(i int, e *Element, cur *Element) *Element {
 	}
 
 	curByte := e.key[i]
-	var children *Element
-	var ok bool
-	if children, ok = cur.c[curByte]; !ok {
+	children, ok := cur.c[curByte]
+
+	if !ok {
+
 		if i == len(e.key)-1 {
 			e.trie = t
 			e.p = cur
@@ -97,7 +120,14 @@ func (t *Trie) insert(i int, e *Element, cur *Element) *Element {
 			e.b = curByte
 			return cur.addChildrenWithElement(e)
 		}
+
 		children = cur.addChildrenWithByte(curByte)
+		return t.insert(i+1, e, children)
+	}
+
+	if i == len(e.key)-1 {
+		children.isWorld = true
+		return children
 	}
 
 	return t.insert(i+1, e, children)
@@ -116,5 +146,27 @@ func (t *Trie) find(i int, key []byte, cur *Element) *Element {
 		return nil
 	}
 
+	if i == len(key)-1 && curByte == children.b && children.isWorld {
+		return cur
+	}
+
 	return t.find(i+1, key, children)
+}
+
+// Dump used for debug.
+func (t *Trie) Dump() {
+	fmt.Println("Dump start")
+	walkTree(t.root, 0)
+	fmt.Println("Dump end")
+}
+
+func walkTree(e *Element, level int) {
+	for k := range e.c {
+		fmt.Printf("%v %c ", level, k)
+	}
+	fmt.Println()
+
+	for _, v := range e.c {
+		walkTree(v, level+1)
+	}
 }
