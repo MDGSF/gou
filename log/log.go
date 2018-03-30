@@ -122,9 +122,9 @@ type Logger struct {
 	mu     sync.Mutex // ensures atomic writes; protects the following fields
 	prefix string     // prefix to write at beginning of each line
 	suffix string
-	flag   int         // properties
-	out    []io.Writer // destination for output
-	buf    []byte      // for accumulating text to write
+	flag   int       // properties
+	out    io.Writer // destination for output
+	buf    []byte    // for accumulating text to write
 
 	// level log level
 	level Level
@@ -137,24 +137,25 @@ type Logger struct {
 // destination to which log data will be written.
 // The prefix appears at the beginning of each generated log line.
 // The flag argument defines the logging properties.
-func New(out []io.Writer, prefix string, suffix string, flag int, level Level) *Logger {
+func New(out io.Writer, prefix string, suffix string, flag int, level Level, isTerminal bool) *Logger {
 	return &Logger{
-		out:    out,
-		prefix: prefix,
-		suffix: suffix,
-		flag:   flag,
-		level:  level,
+		out:        out,
+		prefix:     prefix,
+		suffix:     suffix,
+		flag:       flag,
+		level:      level,
+		isTerminal: isTerminal,
 	}
 }
 
 // SetOutput sets the output destination for the logger.
-func (l *Logger) SetOutput(w []io.Writer) {
+func (l *Logger) SetOutput(w io.Writer) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 	l.out = w
 }
 
-var std = New([]io.Writer{os.Stderr}, "", "", LstdFlags|Lshortfile, DebugLevel)
+var std = New(os.Stderr, "", "", LstdFlags|Lshortfile, DebugLevel, true)
 
 // Cheap integer to fixed-width decimal ASCII. Give a negative width to avoid zero-padding.
 func itoa(buf *[]byte, i int, wid int) {
@@ -181,7 +182,12 @@ func (l *Logger) formatHeader(buf *[]byte, t time.Time, file string, line int, l
 
 	*buf = append(*buf, l.prefix...)
 
-	levelString := fmt.Sprintf("\x1b[%dm%s\x1b[0m", level.Color(), level.String())
+	levelString := ""
+	if l.isTerminal {
+		levelString = fmt.Sprintf("\x1b[%dm%s\x1b[0m", level.Color(), level.String())
+	} else {
+		levelString = fmt.Sprintf("%s", level.String())
+	}
 
 	*buf = append(*buf, levelString...)
 	*buf = append(*buf, ' ')
@@ -277,10 +283,7 @@ func (l *Logger) Output(calldepth int, s string, level Level) error {
 		l.buf = append(l.buf, '\n')
 	}
 
-	var err error
-	for _, v := range l.out {
-		_, err = v.Write(l.buf)
-	}
+	_, err := l.out.Write(l.buf)
 	return err
 }
 
@@ -458,7 +461,7 @@ func (l *Logger) SetSuffix(suffix string) {
 }
 
 // SetOutput sets the output destination for the standard logger.
-func SetOutput(w []io.Writer) {
+func SetOutput(w io.Writer) {
 	std.mu.Lock()
 	defer std.mu.Unlock()
 	std.out = w
@@ -622,4 +625,9 @@ func Panicln(v ...interface{}) {
 // for the caller of Output.
 func Output(calldepth int, s string) error {
 	return std.Output(calldepth+1, s, std.level) // +1 for this frame.
+}
+
+// MultiLogger use to output log to console and file at the same time.
+type MultiLogger struct {
+	logger []Logger
 }

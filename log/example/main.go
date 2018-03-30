@@ -23,7 +23,7 @@ func newLog() {
 		out = append(out, file)
 	}
 
-	var mylog = log.New(out, "GameID = kddMJ, ", " ||| roomid = 1024, UserID = 110", log.Ldate|log.Ltime|log.Lmicroseconds|log.Lshortfile, log.DebugLevel)
+	var mylog = log.New(os.Stdout, "GameID = kddMJ, ", " ||| roomid = 1024, UserID = 110", log.Ldate|log.Ltime|log.Lmicroseconds|log.Lshortfile, log.DebugLevel, true)
 	mylog.Println("KDDMJ Start, TDHMJ Start, TJMJ Start")
 
 	mylog.SetLevel(log.DebugLevel)
