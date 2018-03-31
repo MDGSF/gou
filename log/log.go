@@ -31,8 +31,6 @@ import (
 type Logger struct {
 	mu sync.Mutex // ensures atomic writes; protects the following fields
 
-	Formatter Formatter
-
 	prefix string // prefix to write at beginning of each line
 	suffix string //suffix to wirte at the end of each line.
 	flag   int    // properties
