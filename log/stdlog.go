@@ -8,6 +8,13 @@ import (
 
 var std = New(os.Stderr, "", "", LstdFlags|Lshortfile, DebugLevel, IsTerminal)
 
+// SetLevel sets the log level.
+func SetLevel(level Level) {
+	std.mu.Lock()
+	defer std.mu.Unlock()
+	std.level = level
+}
+
 // SetOutput sets the output destination for the standard logger.
 func SetOutput(w io.Writer) {
 	std.mu.Lock()
@@ -47,6 +54,13 @@ func SetSuffix(suffix string) {
 
 // These functions write to the standard logger.
 
+// Error is the same as Errorf
+func Error(format string, v ...interface{}) {
+	if std.level >= ErrorLevel {
+		std.Output(2, fmt.Sprintf(format, v...), ErrorLevel)
+	}
+}
+
 // Errorf calls Output to print to the standard logger.
 // Arguments are handled in the manner of fmt.Printf.
 func Errorf(format string, v ...interface{}) {
@@ -59,6 +73,13 @@ func Errorf(format string, v ...interface{}) {
 func Errorln(v ...interface{}) {
 	if std.level >= ErrorLevel {
 		std.Output(2, fmt.Sprintln(v...), ErrorLevel)
+	}
+}
+
+// Warn is the same as Warnf
+func Warn(format string, v ...interface{}) {
+	if std.level >= WarnLevel {
+		std.Output(2, fmt.Sprintf(format, v...), WarnLevel)
 	}
 }
 
@@ -77,6 +98,13 @@ func Warnln(v ...interface{}) {
 	}
 }
 
+// Info is the same as Infof
+func Info(format string, v ...interface{}) {
+	if std.level >= InfoLevel {
+		std.Output(2, fmt.Sprintf(format, v...), InfoLevel)
+	}
+}
+
 // Infof calls Output to print to the standard logger.
 // Arguments are handled in the manner of fmt.Printf.
 func Infof(format string, v ...interface{}) {
@@ -89,6 +117,20 @@ func Infof(format string, v ...interface{}) {
 func Infoln(v ...interface{}) {
 	if std.level >= InfoLevel {
 		std.Output(2, fmt.Sprintln(v...), InfoLevel)
+	}
+}
+
+// Verbose is the same as Debug
+func Verbose(format string, v ...interface{}) {
+	if std.level >= DebugLevel {
+		std.Output(2, fmt.Sprintf(format, v...), DebugLevel)
+	}
+}
+
+// Debug is the same as Debugf
+func Debug(format string, v ...interface{}) {
+	if std.level >= DebugLevel {
+		std.Output(2, fmt.Sprintf(format, v...), DebugLevel)
 	}
 }
 
