@@ -169,40 +169,40 @@ func Println(v ...interface{}) {
 
 // Fatal is equivalent to Print() followed by a call to os.Exit(1).
 func Fatal(v ...interface{}) {
-	std.Output(2, fmt.Sprint(v...), std.level)
+	std.Output(2, fmt.Sprint(v...), FatalLevel)
 	os.Exit(1)
 }
 
 // Fatalf is equivalent to Printf() followed by a call to os.Exit(1).
 func Fatalf(format string, v ...interface{}) {
-	std.Output(2, fmt.Sprintf(format, v...), std.level)
+	std.Output(2, fmt.Sprintf(format, v...), FatalLevel)
 	os.Exit(1)
 }
 
 // Fatalln is equivalent to Println() followed by a call to os.Exit(1).
 func Fatalln(v ...interface{}) {
-	std.Output(2, fmt.Sprintln(v...), std.level)
+	std.Output(2, fmt.Sprintln(v...), FatalLevel)
 	os.Exit(1)
 }
 
 // Panic is equivalent to Print() followed by a call to panic().
 func Panic(v ...interface{}) {
 	s := fmt.Sprint(v...)
-	std.Output(2, s, std.level)
+	std.Output(2, s, PanicLevel)
 	panic(s)
 }
 
 // Panicf is equivalent to Printf() followed by a call to panic().
 func Panicf(format string, v ...interface{}) {
 	s := fmt.Sprintf(format, v...)
-	std.Output(2, s, std.level)
+	std.Output(2, s, PanicLevel)
 	panic(s)
 }
 
 // Panicln is equivalent to Println() followed by a call to panic().
 func Panicln(v ...interface{}) {
 	s := fmt.Sprintln(v...)
-	std.Output(2, s, std.level)
+	std.Output(2, s, PanicLevel)
 	panic(s)
 }
 
