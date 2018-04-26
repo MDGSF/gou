@@ -12,16 +12,21 @@ func main() {
 	fmt.Println("r.CurSize() = ", r.CurSize())
 	fmt.Println("r.MaxSize() = ", r.MaxSize())
 
-	r.Push(1)
-	r.Push(2)
-	r.Push(3)
+	r.PushBack(1)
+	r.PushBack(2)
+	r.PushBack(3)
 	fmt.Println("r.CurSize() = ", r.CurSize())
 	fmt.Println("r.MaxSize() = ", r.MaxSize())
 
-	fmt.Println(r.Pop())
-	r.Push(4)
+	fmt.Println(r.PopFront())
+	r.PushBack(4)
 
-	fmt.Println(r.Pop())
-	fmt.Println(r.Pop())
-	fmt.Println(r.Pop())
+	//fmt.Println(r.PopFront())
+	//fmt.Println(r.PopFront())
+	//fmt.Println(r.PopFront())
+
+	r.Do(func(v interface{}) {
+		value := v.(int)
+		fmt.Println("value = ", value)
+	})
 }
