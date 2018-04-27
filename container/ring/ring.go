@@ -4,6 +4,7 @@ import (
 	"errors"
 )
 
+// Ring ring buffer use an array.
 type Ring struct {
 	start   int
 	end     int
@@ -12,6 +13,7 @@ type Ring struct {
 	Value   []interface{}
 }
 
+// New creates a ring with maxsize capacity.
 func New(maxsize int) *Ring {
 	if maxsize <= 0 {
 		return nil
@@ -25,14 +27,17 @@ func New(maxsize int) *Ring {
 	return r
 }
 
+// CurSize returns the number of elements in ring r.
 func (r *Ring) CurSize() int {
 	return r.cursize
 }
 
+// MaxSize returns the capacity of the ring r.
 func (r *Ring) MaxSize() int {
 	return r.maxsize
 }
 
+// PushFront push a new element to the ring head.
 func (r *Ring) PushFront(value interface{}) error {
 	if r.cursize >= r.maxsize {
 		return errors.New("ring is full")
@@ -48,6 +53,7 @@ func (r *Ring) PushFront(value interface{}) error {
 	return nil
 }
 
+// PushBack push a new element to the ring tail.
 func (r *Ring) PushBack(value interface{}) error {
 	if r.cursize >= r.maxsize {
 		return errors.New("ring is full")
@@ -59,6 +65,7 @@ func (r *Ring) PushBack(value interface{}) error {
 	return nil
 }
 
+// PopFront pop out an element in the ring head.
 func (r *Ring) PopFront() (interface{}, error) {
 	if r.cursize <= 0 {
 		return nil, errors.New("ring is empty")
@@ -70,6 +77,7 @@ func (r *Ring) PopFront() (interface{}, error) {
 	return v, nil
 }
 
+// PopBack pop out an element in the ring tail.
 func (r *Ring) PopBack() (interface{}, error) {
 	if r.cursize <= 0 {
 		return nil, errors.New("ring is empty")
@@ -85,6 +93,7 @@ func (r *Ring) PopBack() (interface{}, error) {
 	return v, nil
 }
 
+// Front get front element, not delete front element.
 func (r *Ring) Front() (interface{}, error) {
 	if r.cursize <= 0 {
 		return nil, errors.New("ring is empty")
@@ -94,6 +103,7 @@ func (r *Ring) Front() (interface{}, error) {
 	return v, nil
 }
 
+// Back get back element, not delete back element.
 func (r *Ring) Back() (interface{}, error) {
 	if r.cursize <= 0 {
 		return nil, errors.New("ring is empty")
@@ -109,6 +119,7 @@ func (r *Ring) Back() (interface{}, error) {
 	return v, nil
 }
 
+// Do calls function f on each element of the ring r, in forward order.
 func (r *Ring) Do(f func(interface{})) {
 	if r != nil {
 		size := r.cursize
