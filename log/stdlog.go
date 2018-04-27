@@ -8,6 +8,13 @@ import (
 
 var std = New(os.Stderr, "", "", LstdFlags|Lshortfile, VerboseLevel, IsTerminal)
 
+// SetIsTerminal set whether log output is terminal
+func SetIsTerminal(isTerminal int) {
+	std.mu.Lock()
+	defer std.mu.Unlock()
+	std.isTerminal = isTerminal
+}
+
 // SetLevel sets the log level.
 func SetLevel(level Level) {
 	std.mu.Lock()

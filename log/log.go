@@ -61,6 +61,13 @@ func New(out io.Writer, prefix string, suffix string, flag int, level Level, isT
 	}
 }
 
+// SetIsTerminal set whether log output is terminal
+func (l *Logger) SetIsTerminal(isTerminal int) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	l.isTerminal = isTerminal
+}
+
 // SetOutput sets the output destination for the logger.
 func (l *Logger) SetOutput(w io.Writer) {
 	l.mu.Lock()
