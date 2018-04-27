@@ -224,46 +224,46 @@ func (l *Logger) Output(calldepth int, s string, level Level) error {
 // Panic is equivalent to l.Print() followed by a call to panic().
 func (l *Logger) Panic(v ...interface{}) {
 	s := fmt.Sprint(v...)
-	l.Output(2, s, PanicLevel)
+	l.Output(l.callDepth, s, PanicLevel)
 	panic(s)
 }
 
 // Panicf is equivalent to l.Printf() followed by a call to panic().
 func (l *Logger) Panicf(format string, v ...interface{}) {
 	s := fmt.Sprintf(format, v...)
-	l.Output(2, s, PanicLevel)
+	l.Output(l.callDepth, s, PanicLevel)
 	panic(s)
 }
 
 // Panicln is equivalent to l.Println() followed by a call to panic().
 func (l *Logger) Panicln(v ...interface{}) {
 	s := fmt.Sprintln(v...)
-	l.Output(2, s, PanicLevel)
+	l.Output(l.callDepth, s, PanicLevel)
 	panic(s)
 }
 
 // Fatal is equivalent to l.Print() followed by a call to os.Exit(1).
 func (l *Logger) Fatal(v ...interface{}) {
-	l.Output(2, fmt.Sprint(v...), FatalLevel)
+	l.Output(l.callDepth, fmt.Sprint(v...), FatalLevel)
 	os.Exit(1)
 }
 
 // Fatalf is equivalent to l.Printf() followed by a call to os.Exit(1).
 func (l *Logger) Fatalf(format string, v ...interface{}) {
-	l.Output(2, fmt.Sprintf(format, v...), FatalLevel)
+	l.Output(l.callDepth, fmt.Sprintf(format, v...), FatalLevel)
 	os.Exit(1)
 }
 
 // Fatalln is equivalent to l.Println() followed by a call to os.Exit(1).
 func (l *Logger) Fatalln(v ...interface{}) {
-	l.Output(2, fmt.Sprintln(v...), FatalLevel)
+	l.Output(l.callDepth, fmt.Sprintln(v...), FatalLevel)
 	os.Exit(1)
 }
 
 // Error is the same as Errorf
 func (l *Logger) Error(format string, v ...interface{}) {
 	if l.level >= ErrorLevel {
-		l.Output(2, fmt.Sprintf(format, v...), ErrorLevel)
+		l.Output(l.callDepth, fmt.Sprintf(format, v...), ErrorLevel)
 	}
 }
 
@@ -271,21 +271,21 @@ func (l *Logger) Error(format string, v ...interface{}) {
 // Arguments are handled in the manner of fmt.Printf.
 func (l *Logger) Errorf(format string, v ...interface{}) {
 	if l.level >= ErrorLevel {
-		l.Output(2, fmt.Sprintf(format, v...), ErrorLevel)
+		l.Output(l.callDepth, fmt.Sprintf(format, v...), ErrorLevel)
 	}
 }
 
 // Errorln debug level log
 func (l *Logger) Errorln(v ...interface{}) {
 	if l.level >= ErrorLevel {
-		l.Output(2, fmt.Sprintln(v...), ErrorLevel)
+		l.Output(l.callDepth, fmt.Sprintln(v...), ErrorLevel)
 	}
 }
 
 // Warn is the same as Warnf
 func (l *Logger) Warn(format string, v ...interface{}) {
 	if l.level >= WarnLevel {
-		l.Output(2, fmt.Sprintf(format, v...), WarnLevel)
+		l.Output(l.callDepth, fmt.Sprintf(format, v...), WarnLevel)
 	}
 }
 
@@ -293,21 +293,21 @@ func (l *Logger) Warn(format string, v ...interface{}) {
 // Arguments are handled in the manner of fmt.Printf.
 func (l *Logger) Warnf(format string, v ...interface{}) {
 	if l.level >= WarnLevel {
-		l.Output(2, fmt.Sprintf(format, v...), WarnLevel)
+		l.Output(l.callDepth, fmt.Sprintf(format, v...), WarnLevel)
 	}
 }
 
 // Warnln debug level log
 func (l *Logger) Warnln(v ...interface{}) {
 	if l.level >= WarnLevel {
-		l.Output(2, fmt.Sprintln(v...), WarnLevel)
+		l.Output(l.callDepth, fmt.Sprintln(v...), WarnLevel)
 	}
 }
 
 // Info is the same as Infof
 func (l *Logger) Info(format string, v ...interface{}) {
 	if l.level >= InfoLevel {
-		l.Output(2, fmt.Sprintf(format, v...), InfoLevel)
+		l.Output(l.callDepth, fmt.Sprintf(format, v...), InfoLevel)
 	}
 }
 
@@ -315,21 +315,21 @@ func (l *Logger) Info(format string, v ...interface{}) {
 // Arguments are handled in the manner of fmt.Printf.
 func (l *Logger) Infof(format string, v ...interface{}) {
 	if l.level >= InfoLevel {
-		l.Output(2, fmt.Sprintf(format, v...), InfoLevel)
+		l.Output(l.callDepth, fmt.Sprintf(format, v...), InfoLevel)
 	}
 }
 
 // Infoln debug level log
 func (l *Logger) Infoln(v ...interface{}) {
 	if l.level >= InfoLevel {
-		l.Output(2, fmt.Sprintln(v...), InfoLevel)
+		l.Output(l.callDepth, fmt.Sprintln(v...), InfoLevel)
 	}
 }
 
 // Debug is the same as Debugf
 func (l *Logger) Debug(format string, v ...interface{}) {
 	if l.level >= DebugLevel {
-		l.Output(2, fmt.Sprintf(format, v...), DebugLevel)
+		l.Output(l.callDepth, fmt.Sprintf(format, v...), DebugLevel)
 	}
 }
 
@@ -337,21 +337,21 @@ func (l *Logger) Debug(format string, v ...interface{}) {
 // Arguments are handled in the manner of fmt.Printf.
 func (l *Logger) Debugf(format string, v ...interface{}) {
 	if l.level >= DebugLevel {
-		l.Output(2, fmt.Sprintf(format, v...), DebugLevel)
+		l.Output(l.callDepth, fmt.Sprintf(format, v...), DebugLevel)
 	}
 }
 
 // Debugln debug level log
 func (l *Logger) Debugln(v ...interface{}) {
 	if l.level >= DebugLevel {
-		l.Output(2, fmt.Sprintln(v...), DebugLevel)
+		l.Output(l.callDepth, fmt.Sprintln(v...), DebugLevel)
 	}
 }
 
 // Verbose is the same as Verbosef
 func (l *Logger) Verbose(format string, v ...interface{}) {
 	if l.level >= VerboseLevel {
-		l.Output(2, fmt.Sprintf(format, v...), VerboseLevel)
+		l.Output(l.callDepth, fmt.Sprintf(format, v...), VerboseLevel)
 	}
 }
 
@@ -359,33 +359,33 @@ func (l *Logger) Verbose(format string, v ...interface{}) {
 // Arguments are handled in the manner of fmt.Printf.
 func (l *Logger) Verbosef(format string, v ...interface{}) {
 	if l.level >= VerboseLevel {
-		l.Output(2, fmt.Sprintf(format, v...), VerboseLevel)
+		l.Output(l.callDepth, fmt.Sprintf(format, v...), VerboseLevel)
 	}
 }
 
 // Verboseln verbose level log
 func (l *Logger) Verboseln(v ...interface{}) {
 	if l.level >= VerboseLevel {
-		l.Output(2, fmt.Sprintln(v...), VerboseLevel)
+		l.Output(l.callDepth, fmt.Sprintln(v...), VerboseLevel)
 	}
 }
 
 // Print calls l.Output to print to the logger.
 // Arguments are handled in the manner of fmt.Print.
 func (l *Logger) Print(v ...interface{}) {
-	l.Output(2, fmt.Sprint(v...), l.level)
+	l.Output(l.callDepth, fmt.Sprint(v...), l.level)
 }
 
 // Printf calls l.Output to print to the logger.
 // Arguments are handled in the manner of fmt.Printf.
 func (l *Logger) Printf(format string, v ...interface{}) {
-	l.Output(2, fmt.Sprintf(format, v...), l.level)
+	l.Output(l.callDepth, fmt.Sprintf(format, v...), l.level)
 }
 
 // Println calls l.Output to print to the logger.
 // Arguments are handled in the manner of fmt.Println.
 func (l *Logger) Println(v ...interface{}) {
-	l.Output(2, fmt.Sprintln(v...), l.level)
+	l.Output(l.callDepth, fmt.Sprintln(v...), l.level)
 }
 
 // Level returns the log level.
