@@ -20,17 +20,28 @@ func main() {
 		"GameID = kddMJ, ",
 		" ||| roomid = 1024, UserID = 110",
 		log.Ldate|log.Ltime|log.Lmicroseconds|log.Lshortfile,
-		log.DebugLevel,
+		log.VerboseLevel,
 		log.IsTerminal)
 
 	mylog.Println("KDDMJ Start, TDHMJ Start, TJMJ Start")
 
-	mylog.Errorln("I'm error level log")
-	mylog.Errorf("I'm error level log = %d", 12)
-	mylog.Warnln("I'm warn level log")
-	mylog.Warnf("I'm warn level log = %d", 13)
-	mylog.Infoln("I'm info level log")
-	mylog.Infof("I'm info level log = %d", 14)
-	mylog.Debugln("I'm debug level log")
-	mylog.Debugf("I'm debug level log = %d", 15)
+	mylog.Error("I'm error level log = %d", 12)
+	mylog.Errorf("I'm errorf level log = %d", 12)
+	mylog.Errorln("I'm errorln level log")
+
+	mylog.Warn("I'm warnf level log = %d", 13)
+	mylog.Warnf("I'm warnf level log = %d", 13)
+	mylog.Warnln("I'm warnln level log")
+
+	mylog.Info("I'm info level log = %d", 14)
+	mylog.Infof("I'm infof level log = %d", 14)
+	mylog.Infoln("I'm infoln level log")
+
+	mylog.Debug("I'm debug level log = %d", 15)
+	mylog.Debugf("I'm debugf level log = %d", 15)
+	mylog.Debugln("I'm debugln level log")
+
+	mylog.Verbose("I'm verbose level log = %d", 16)
+	mylog.Verbosef("I'm verbosef level log = %d", 16)
+	mylog.Verboseln("I'm verboseln level log")
 }

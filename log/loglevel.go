@@ -17,6 +17,8 @@ func (level Level) String() string {
 		return "INFO"
 	case DebugLevel:
 		return "DEBU"
+	case VerboseLevel:
+		return "VEBO"
 	}
 	return "unknown"
 }
@@ -35,6 +37,8 @@ func (level Level) Color() int {
 	case InfoLevel:
 		return blue
 	case DebugLevel:
+		return green
+	case VerboseLevel:
 		return gray
 	}
 	return nocolor

@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-var std = New(os.Stderr, "", "", LstdFlags|Lshortfile, DebugLevel, IsTerminal)
+var std = New(os.Stderr, "", "", LstdFlags|Lshortfile, VerboseLevel, IsTerminal)
 
 // SetLevel sets the log level.
 func SetLevel(level Level) {
@@ -52,7 +52,57 @@ func SetSuffix(suffix string) {
 	std.SetSuffix(suffix)
 }
 
+// Output writes the output for a logging event. The string s contains
+// the text to print after the prefix specified by the flags of the
+// Logger. A newline is appended if the last character of s is not
+// already a newline. Calldepth is the count of the number of
+// frames to skip when computing the file name and line number
+// if Llongfile or Lshortfile is set; a value of 1 will print the details
+// for the caller of Output.
+func Output(calldepth int, s string) error {
+	return std.Output(calldepth+1, s, std.level) // +1 for this frame.
+}
+
 // These functions write to the standard logger.
+
+// Panic is equivalent to Print() followed by a call to panic().
+func Panic(v ...interface{}) {
+	s := fmt.Sprint(v...)
+	std.Output(2, s, PanicLevel)
+	panic(s)
+}
+
+// Panicf is equivalent to Printf() followed by a call to panic().
+func Panicf(format string, v ...interface{}) {
+	s := fmt.Sprintf(format, v...)
+	std.Output(2, s, PanicLevel)
+	panic(s)
+}
+
+// Panicln is equivalent to Println() followed by a call to panic().
+func Panicln(v ...interface{}) {
+	s := fmt.Sprintln(v...)
+	std.Output(2, s, PanicLevel)
+	panic(s)
+}
+
+// Fatal is equivalent to Print() followed by a call to os.Exit(1).
+func Fatal(v ...interface{}) {
+	std.Output(2, fmt.Sprint(v...), FatalLevel)
+	os.Exit(1)
+}
+
+// Fatalf is equivalent to Printf() followed by a call to os.Exit(1).
+func Fatalf(format string, v ...interface{}) {
+	std.Output(2, fmt.Sprintf(format, v...), FatalLevel)
+	os.Exit(1)
+}
+
+// Fatalln is equivalent to Println() followed by a call to os.Exit(1).
+func Fatalln(v ...interface{}) {
+	std.Output(2, fmt.Sprintln(v...), FatalLevel)
+	os.Exit(1)
+}
 
 // Error is the same as Errorf
 func Error(format string, v ...interface{}) {
@@ -120,13 +170,6 @@ func Infoln(v ...interface{}) {
 	}
 }
 
-// Verbose is the same as Debug
-func Verbose(format string, v ...interface{}) {
-	if std.level >= DebugLevel {
-		std.Output(2, fmt.Sprintf(format, v...), DebugLevel)
-	}
-}
-
 // Debug is the same as Debugf
 func Debug(format string, v ...interface{}) {
 	if std.level >= DebugLevel {
@@ -149,6 +192,28 @@ func Debugln(v ...interface{}) {
 	}
 }
 
+// Verbose is the same as Verbosef
+func Verbose(format string, v ...interface{}) {
+	if std.level >= VerboseLevel {
+		std.Output(2, fmt.Sprintf(format, v...), VerboseLevel)
+	}
+}
+
+// Verbosef calls Output to print to the standard logger.
+// Arguments are handled in the manner of fmt.Printf.
+func Verbosef(format string, v ...interface{}) {
+	if std.level >= VerboseLevel {
+		std.Output(2, fmt.Sprintf(format, v...), VerboseLevel)
+	}
+}
+
+// Verboseln verbose level log
+func Verboseln(v ...interface{}) {
+	if std.level >= VerboseLevel {
+		std.Output(2, fmt.Sprintln(v...), VerboseLevel)
+	}
+}
+
 // Print calls Output to print to the standard logger.
 // Arguments are handled in the manner of fmt.Print.
 func Print(v ...interface{}) {
@@ -165,54 +230,4 @@ func Printf(format string, v ...interface{}) {
 // Arguments are handled in the manner of fmt.Println.
 func Println(v ...interface{}) {
 	std.Output(2, fmt.Sprintln(v...), std.level)
-}
-
-// Fatal is equivalent to Print() followed by a call to os.Exit(1).
-func Fatal(v ...interface{}) {
-	std.Output(2, fmt.Sprint(v...), FatalLevel)
-	os.Exit(1)
-}
-
-// Fatalf is equivalent to Printf() followed by a call to os.Exit(1).
-func Fatalf(format string, v ...interface{}) {
-	std.Output(2, fmt.Sprintf(format, v...), FatalLevel)
-	os.Exit(1)
-}
-
-// Fatalln is equivalent to Println() followed by a call to os.Exit(1).
-func Fatalln(v ...interface{}) {
-	std.Output(2, fmt.Sprintln(v...), FatalLevel)
-	os.Exit(1)
-}
-
-// Panic is equivalent to Print() followed by a call to panic().
-func Panic(v ...interface{}) {
-	s := fmt.Sprint(v...)
-	std.Output(2, s, PanicLevel)
-	panic(s)
-}
-
-// Panicf is equivalent to Printf() followed by a call to panic().
-func Panicf(format string, v ...interface{}) {
-	s := fmt.Sprintf(format, v...)
-	std.Output(2, s, PanicLevel)
-	panic(s)
-}
-
-// Panicln is equivalent to Println() followed by a call to panic().
-func Panicln(v ...interface{}) {
-	s := fmt.Sprintln(v...)
-	std.Output(2, s, PanicLevel)
-	panic(s)
-}
-
-// Output writes the output for a logging event. The string s contains
-// the text to print after the prefix specified by the flags of the
-// Logger. A newline is appended if the last character of s is not
-// already a newline. Calldepth is the count of the number of
-// frames to skip when computing the file name and line number
-// if Llongfile or Lshortfile is set; a value of 1 will print the details
-// for the caller of Output.
-func Output(calldepth int, s string) error {
-	return std.Output(calldepth+1, s, std.level) // +1 for this frame.
 }

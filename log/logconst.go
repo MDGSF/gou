@@ -22,6 +22,9 @@ const (
 
 	// DebugLevel level
 	DebugLevel
+
+	// VerboseLevel level
+	VerboseLevel
 )
 
 const (
