@@ -44,6 +44,8 @@ type Logger struct {
 
 	// isTerminal whether log is output to terminal.
 	isTerminal int
+
+	callDepth int
 }
 
 // New creates a new Logger. The out variable sets the
@@ -58,7 +60,22 @@ func New(out io.Writer, prefix string, suffix string, flag int, level Level, isT
 		flag:       flag,
 		level:      level,
 		isTerminal: isTerminal,
+		callDepth:  2,
 	}
+}
+
+// IncrOneCallDepth call depth add one
+func (l *Logger) IncrOneCallDepth() {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	l.callDepth++
+}
+
+// SetCallDepth set whether log output is terminal
+func (l *Logger) SetCallDepth(callDepth int) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	l.callDepth = callDepth
 }
 
 // SetIsTerminal set whether log output is terminal

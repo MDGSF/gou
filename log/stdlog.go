@@ -8,6 +8,20 @@ import (
 
 var std = New(os.Stderr, "", "", LstdFlags|Lshortfile, VerboseLevel, IsTerminal)
 
+// IncrOneCallDepth call depth add one
+func IncrOneCallDepth() {
+	std.mu.Lock()
+	defer std.mu.Unlock()
+	std.callDepth++
+}
+
+// SetCallDepth set whether log output is terminal
+func SetCallDepth(callDepth int) {
+	std.mu.Lock()
+	defer std.mu.Unlock()
+	std.callDepth = callDepth
+}
+
 // SetIsTerminal set whether log output is terminal
 func SetIsTerminal(isTerminal int) {
 	std.mu.Lock()
@@ -75,46 +89,46 @@ func Output(calldepth int, s string) error {
 // Panic is equivalent to Print() followed by a call to panic().
 func Panic(v ...interface{}) {
 	s := fmt.Sprint(v...)
-	std.Output(2, s, PanicLevel)
+	std.Output(std.callDepth, s, PanicLevel)
 	panic(s)
 }
 
 // Panicf is equivalent to Printf() followed by a call to panic().
 func Panicf(format string, v ...interface{}) {
 	s := fmt.Sprintf(format, v...)
-	std.Output(2, s, PanicLevel)
+	std.Output(std.callDepth, s, PanicLevel)
 	panic(s)
 }
 
 // Panicln is equivalent to Println() followed by a call to panic().
 func Panicln(v ...interface{}) {
 	s := fmt.Sprintln(v...)
-	std.Output(2, s, PanicLevel)
+	std.Output(std.callDepth, s, PanicLevel)
 	panic(s)
 }
 
 // Fatal is equivalent to Print() followed by a call to os.Exit(1).
 func Fatal(v ...interface{}) {
-	std.Output(2, fmt.Sprint(v...), FatalLevel)
+	std.Output(std.callDepth, fmt.Sprint(v...), FatalLevel)
 	os.Exit(1)
 }
 
 // Fatalf is equivalent to Printf() followed by a call to os.Exit(1).
 func Fatalf(format string, v ...interface{}) {
-	std.Output(2, fmt.Sprintf(format, v...), FatalLevel)
+	std.Output(std.callDepth, fmt.Sprintf(format, v...), FatalLevel)
 	os.Exit(1)
 }
 
 // Fatalln is equivalent to Println() followed by a call to os.Exit(1).
 func Fatalln(v ...interface{}) {
-	std.Output(2, fmt.Sprintln(v...), FatalLevel)
+	std.Output(std.callDepth, fmt.Sprintln(v...), FatalLevel)
 	os.Exit(1)
 }
 
 // Error is the same as Errorf
 func Error(format string, v ...interface{}) {
 	if std.level >= ErrorLevel {
-		std.Output(2, fmt.Sprintf(format, v...), ErrorLevel)
+		std.Output(std.callDepth, fmt.Sprintf(format, v...), ErrorLevel)
 	}
 }
 
@@ -122,21 +136,21 @@ func Error(format string, v ...interface{}) {
 // Arguments are handled in the manner of fmt.Printf.
 func Errorf(format string, v ...interface{}) {
 	if std.level >= ErrorLevel {
-		std.Output(2, fmt.Sprintf(format, v...), ErrorLevel)
+		std.Output(std.callDepth, fmt.Sprintf(format, v...), ErrorLevel)
 	}
 }
 
 // Errorln debug level log
 func Errorln(v ...interface{}) {
 	if std.level >= ErrorLevel {
-		std.Output(2, fmt.Sprintln(v...), ErrorLevel)
+		std.Output(std.callDepth, fmt.Sprintln(v...), ErrorLevel)
 	}
 }
 
 // Warn is the same as Warnf
 func Warn(format string, v ...interface{}) {
 	if std.level >= WarnLevel {
-		std.Output(2, fmt.Sprintf(format, v...), WarnLevel)
+		std.Output(std.callDepth, fmt.Sprintf(format, v...), WarnLevel)
 	}
 }
 
@@ -144,21 +158,21 @@ func Warn(format string, v ...interface{}) {
 // Arguments are handled in the manner of fmt.Printf.
 func Warnf(format string, v ...interface{}) {
 	if std.level >= WarnLevel {
-		std.Output(2, fmt.Sprintf(format, v...), WarnLevel)
+		std.Output(std.callDepth, fmt.Sprintf(format, v...), WarnLevel)
 	}
 }
 
 // Warnln debug level log
 func Warnln(v ...interface{}) {
 	if std.level >= WarnLevel {
-		std.Output(2, fmt.Sprintln(v...), WarnLevel)
+		std.Output(std.callDepth, fmt.Sprintln(v...), WarnLevel)
 	}
 }
 
 // Info is the same as Infof
 func Info(format string, v ...interface{}) {
 	if std.level >= InfoLevel {
-		std.Output(2, fmt.Sprintf(format, v...), InfoLevel)
+		std.Output(std.callDepth, fmt.Sprintf(format, v...), InfoLevel)
 	}
 }
 
@@ -166,21 +180,21 @@ func Info(format string, v ...interface{}) {
 // Arguments are handled in the manner of fmt.Printf.
 func Infof(format string, v ...interface{}) {
 	if std.level >= InfoLevel {
-		std.Output(2, fmt.Sprintf(format, v...), InfoLevel)
+		std.Output(std.callDepth, fmt.Sprintf(format, v...), InfoLevel)
 	}
 }
 
 // Infoln debug level log
 func Infoln(v ...interface{}) {
 	if std.level >= InfoLevel {
-		std.Output(2, fmt.Sprintln(v...), InfoLevel)
+		std.Output(std.callDepth, fmt.Sprintln(v...), InfoLevel)
 	}
 }
 
 // Debug is the same as Debugf
 func Debug(format string, v ...interface{}) {
 	if std.level >= DebugLevel {
-		std.Output(2, fmt.Sprintf(format, v...), DebugLevel)
+		std.Output(std.callDepth, fmt.Sprintf(format, v...), DebugLevel)
 	}
 }
 
@@ -188,21 +202,21 @@ func Debug(format string, v ...interface{}) {
 // Arguments are handled in the manner of fmt.Printf.
 func Debugf(format string, v ...interface{}) {
 	if std.level >= DebugLevel {
-		std.Output(2, fmt.Sprintf(format, v...), DebugLevel)
+		std.Output(std.callDepth, fmt.Sprintf(format, v...), DebugLevel)
 	}
 }
 
 // Debugln debug level log
 func Debugln(v ...interface{}) {
 	if std.level >= DebugLevel {
-		std.Output(2, fmt.Sprintln(v...), DebugLevel)
+		std.Output(std.callDepth, fmt.Sprintln(v...), DebugLevel)
 	}
 }
 
 // Verbose is the same as Verbosef
 func Verbose(format string, v ...interface{}) {
 	if std.level >= VerboseLevel {
-		std.Output(2, fmt.Sprintf(format, v...), VerboseLevel)
+		std.Output(std.callDepth, fmt.Sprintf(format, v...), VerboseLevel)
 	}
 }
 
@@ -210,31 +224,31 @@ func Verbose(format string, v ...interface{}) {
 // Arguments are handled in the manner of fmt.Printf.
 func Verbosef(format string, v ...interface{}) {
 	if std.level >= VerboseLevel {
-		std.Output(2, fmt.Sprintf(format, v...), VerboseLevel)
+		std.Output(std.callDepth, fmt.Sprintf(format, v...), VerboseLevel)
 	}
 }
 
 // Verboseln verbose level log
 func Verboseln(v ...interface{}) {
 	if std.level >= VerboseLevel {
-		std.Output(2, fmt.Sprintln(v...), VerboseLevel)
+		std.Output(std.callDepth, fmt.Sprintln(v...), VerboseLevel)
 	}
 }
 
 // Print calls Output to print to the standard logger.
 // Arguments are handled in the manner of fmt.Print.
 func Print(v ...interface{}) {
-	std.Output(2, fmt.Sprint(v...), std.level)
+	std.Output(std.callDepth, fmt.Sprint(v...), std.level)
 }
 
 // Printf calls Output to print to the standard logger.
 // Arguments are handled in the manner of fmt.Printf.
 func Printf(format string, v ...interface{}) {
-	std.Output(2, fmt.Sprintf(format, v...), std.level)
+	std.Output(std.callDepth, fmt.Sprintf(format, v...), std.level)
 }
 
 // Println calls Output to print to the standard logger.
 // Arguments are handled in the manner of fmt.Println.
 func Println(v ...interface{}) {
-	std.Output(2, fmt.Sprintln(v...), std.level)
+	std.Output(std.callDepth, fmt.Sprintln(v...), std.level)
 }

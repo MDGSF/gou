@@ -12,6 +12,7 @@ func main() {
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds | log.Lshortfile)
 	log.SetPrefix("[I'm prefix] ")
 	log.SetSuffix("I'm suffix")
+	log.SetCallDepth(3)
 
 	log.Error("I'm error level log = %d", 12)
 	log.Errorf("I'm errorf level log = %d", 12)
@@ -32,4 +33,10 @@ func main() {
 	log.Verbose("I'm verbose level log = %d", 16)
 	log.Verbosef("I'm verbosef level log = %d", 16)
 	log.Verboseln("I'm verboseln level log")
+
+	logWrapperError()
+}
+
+func logWrapperError() {
+	log.Error("I'm error level log = %d", 12)
 }
