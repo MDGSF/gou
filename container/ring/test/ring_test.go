@@ -111,5 +111,43 @@ func Test7(t *testing.T) {
 	r.PopFront()
 	r.PushBack(4)
 	verify(t, r, 3, 3, 9)
-	dump(r)
+	//dump(r)
+}
+
+func Test8(t *testing.T) {
+	r := ring.New(3)
+	verify(t, r, 0, 3, 0)
+
+	r.PushBack(10)
+	verify(t, r, 1, 3, 10)
+
+	r.PushFront(1)
+	verify(t, r, 2, 3, 11)
+
+	r.PushBack(2)
+	verify(t, r, 3, 3, 13)
+	//dump(r)
+}
+
+func TestErr1(t *testing.T) {
+	r := ring.New(3)
+	r.PopFront()
+	r.PopFront()
+	r.PopFront()
+	verify(t, r, 0, 3, 0)
+}
+
+func TestErr2(t *testing.T) {
+	r := ring.New(3)
+	r.PopBack()
+	r.PopBack()
+	r.PopBack()
+	verify(t, r, 0, 3, 0)
+}
+
+func TestErr3(t *testing.T) {
+	r := ring.New(0)
+	if r != nil {
+		t.Errorf("r != nil")
+	}
 }
