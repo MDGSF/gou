@@ -1,5 +1,7 @@
 package log
 
+import "strings"
+
 // Level type
 type Level uint32
 
@@ -42,5 +44,25 @@ func (level Level) Color() int {
 		return gray
 	}
 	return nocolor
+}
 
+// NameToLevel get log level from level name.
+func NameToLevel(name string) Level {
+	lname := strings.ToLower(name)
+	if strings.Contains(lname, "panic") {
+		return PanicLevel
+	} else if strings.Contains(lname, "fatal") {
+		return FatalLevel
+	} else if strings.Contains(lname, "error") {
+		return ErrorLevel
+	} else if strings.Contains(lname, "warn") {
+		return WarnLevel
+	} else if strings.Contains(lname, "info") {
+		return InfoLevel
+	} else if strings.Contains(lname, "debug") {
+		return DebugLevel
+	} else if strings.Contains(lname, "verbose") {
+		return VerboseLevel
+	}
+	return VerboseLevel
 }
