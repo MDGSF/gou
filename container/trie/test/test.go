@@ -6,7 +6,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/MDGSF/gou/container/trie"
+	"github.com/MDGSF/utils/container/trie"
 )
 
 func main() {
