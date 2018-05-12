@@ -1,4 +1,25 @@
-package gou
+package utils
+
+import (
+	"bytes"
+	"encoding/binary"
+)
+
+// IntTo4Bytes change int to 4 bytes.
+func IntTo4Bytes(n int) []byte {
+	temp := int32(n)
+	bytesBuffer := bytes.NewBuffer([]byte{})
+	binary.Write(bytesBuffer, binary.BigEndian, temp)
+	return bytesBuffer.Bytes()
+}
+
+// BytesToInt32 change byte array to int.
+func BytesToInt32(b []byte) int {
+	bytesBuffer := bytes.NewBuffer(b)
+	var temp int32
+	binary.Read(bytesBuffer, binary.BigEndian, &temp)
+	return int(temp)
+}
 
 // Int32ListRemove 辅助函数，用于从int32数组中移除某个整数
 func Int32ListRemove(intList []int32, element int) []int32 {
