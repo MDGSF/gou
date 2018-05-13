@@ -5,6 +5,13 @@ import (
 	"encoding/binary"
 )
 
+func Max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
 // IntTo4Bytes change int to 4 bytes.
 func IntTo4Bytes(n int) []byte {
 	temp := int32(n)
