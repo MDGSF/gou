@@ -5,6 +5,13 @@ import (
 	"encoding/binary"
 )
 
+func Min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
 func Max(a, b int) int {
 	if a > b {
 		return a
@@ -22,6 +29,7 @@ func IntTo4Bytes(n int) []byte {
 
 // BytesToInt32 change byte array to int.
 func BytesToInt32(b []byte) int {
+	//binary.BigEndian.Uint32()
 	bytesBuffer := bytes.NewBuffer(b)
 	var temp int32
 	binary.Read(bytesBuffer, binary.BigEndian, &temp)
