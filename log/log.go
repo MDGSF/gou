@@ -117,15 +117,17 @@ func (l *Logger) formatHeader(buf *[]byte, t time.Time, file string, line int, l
 
 	*buf = append(*buf, l.prefix...)
 
-	levelString := ""
-	if l.isTerminal == IsTerminal {
-		levelString = fmt.Sprintf("\x1b[%dm%s\x1b[0m", level.Color(), level.String())
-	} else {
-		levelString = fmt.Sprintf("%s", level.String())
-	}
+	if l.flag&LLevel != 0 {
+		levelString := ""
+		if l.isTerminal == IsTerminal {
+			levelString = fmt.Sprintf("\x1b[%dm%s\x1b[0m", level.Color(), level.String())
+		} else {
+			levelString = fmt.Sprintf("%s", level.String())
+		}
 
-	*buf = append(*buf, levelString...)
-	*buf = append(*buf, ' ')
+		*buf = append(*buf, levelString...)
+		*buf = append(*buf, ' ')
+	}
 
 	if l.flag&(Ldate|Ltime|Lmicroseconds) != 0 {
 		if l.flag&LUTC != 0 {
