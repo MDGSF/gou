@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-var std = New(os.Stderr, "", "", LstdFlags|Lshortfile, VerboseLevel, IsTerminal)
+var std = New(os.Stderr, "", "", LLevel|LstdFlags|Lshortfile, VerboseLevel, IsTerminal)
 
 // IncrOneCallDepth call depth add one
 func IncrOneCallDepth() {
