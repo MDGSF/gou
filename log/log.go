@@ -31,6 +31,8 @@ import (
 type Logger struct {
 	mu sync.Mutex // ensures atomic writes; protects the following fields
 
+	contentPrefix string // prefix to write at the beginning of the conntent.
+
 	prefix string // prefix to write at beginning of each line
 	suffix string //suffix to wirte at the end of each line.
 	flag   int    // properties
@@ -199,6 +201,10 @@ func (l *Logger) Output(calldepth int, s string, level Level) error {
 	}
 	l.buf = l.buf[:0]
 	l.formatHeader(&l.buf, now, file, line, level)
+
+	if len(l.contentPrefix) > 0 {
+		l.buf = append(l.buf, l.contentPrefix...)
+	}
 
 	sLen := len(s)
 	if len(s) > 0 && s[len(s)-1] == '\n' {
@@ -430,6 +436,20 @@ func (l *Logger) SetPrefix(prefix string) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 	l.prefix = prefix
+}
+
+// ContentPrefix returns the output content prefix for the logger.
+func (l *Logger) ContentPrefix() string {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	return l.contentPrefix
+}
+
+// SetContentPrefix sets the output content prefix for the logger.
+func (l *Logger) SetContentPrefix(prefix string) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	l.contentPrefix = prefix
 }
 
 // Suffix returns the output suffix for the logger.

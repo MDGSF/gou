@@ -53,6 +53,16 @@ func SetFlags(flag int) {
 	std.SetFlags(flag)
 }
 
+// ContentPrefix returns the output content prefix for the standard logger.
+func ContentPrefix() string {
+	return std.ContentPrefix()
+}
+
+// SetContentPrefix sets the output content prefix for the standard logger.
+func SetContentPrefix(prefix string) {
+	std.SetContentPrefix(prefix)
+}
+
 // Prefix returns the output prefix for the standard logger.
 func Prefix() string {
 	return std.Prefix()

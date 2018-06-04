@@ -23,6 +23,8 @@ func main() {
 		log.VerboseLevel,
 		log.IsTerminal)
 
+	mylog.SetContentPrefix("[ huangjian ] ")
+
 	mylog.Println("KDDMJ Start, TDHMJ Start, TJMJ Start")
 
 	mylog.Error("I'm error level log = %d", 12)
