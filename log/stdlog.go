@@ -36,6 +36,11 @@ func SetLevel(level Level) {
 	std.level = level
 }
 
+// Level returns the log level.
+func GetLevel() Level {
+	return std.Level()
+}
+
 // SetOutput sets the output destination for the standard logger.
 func SetOutput(w io.Writer) {
 	std.mu.Lock()

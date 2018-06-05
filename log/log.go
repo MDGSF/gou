@@ -66,6 +66,10 @@ func New(out io.Writer, prefix string, suffix string, flag int, level Level, isT
 	}
 }
 
+func NewDefaultLog() *Logger {
+	return New(os.Stderr, "", "", LLevel|LstdFlags|Lshortfile, VerboseLevel, IsTerminal)
+}
+
 // IncrOneCallDepth call depth add one
 func (l *Logger) IncrOneCallDepth() {
 	l.mu.Lock()
