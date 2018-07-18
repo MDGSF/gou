@@ -192,6 +192,17 @@ func (bc *MemoryCache) ClearAll() error {
 	return nil
 }
 
+// GetAllKeys get all item's key.
+func (bc *MemoryCache) GetAllKeys() []string {
+	bc.Lock()
+	defer bc.Unlock()
+	keys := make([]string, 0)
+	for key, _ := range bc.items {
+		keys = append(keys, key)
+	}
+	return keys
+}
+
 // StartAndGC start memory cache. it will check expiration in every clock time.
 func (bc *MemoryCache) StartAndGC(config string) error {
 	var cf map[string]int
