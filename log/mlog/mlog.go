@@ -14,6 +14,22 @@ func New() *MLogger {
 	return mlog
 }
 
+func (mlog *MLogger) Clone() *MLogger {
+	newMultiLog := New()
+	for k, _ := range mlog.loggers {
+		curLog := mlog.loggers[k]
+		newLog := curLog.Clone()
+		newMultiLog.loggers = append(newMultiLog.loggers, newLog)
+	}
+	return newMultiLog
+}
+
+func (mlog *MLogger) SetLevel(level log.Level) {
+	for _, log := range mlog.loggers {
+		log.SetLevel(level)
+	}
+}
+
 func (mlog *MLogger) AddOneLogger(logger *log.Logger) {
 	logger.IncrOneCallDepth()
 	mlog.loggers = append(mlog.loggers, logger)

@@ -70,6 +70,21 @@ func NewDefaultLog() *Logger {
 	return New(os.Stderr, "", "", LLevel|LstdFlags|Lshortfile, VerboseLevel, IsTerminal)
 }
 
+func (l *Logger) Clone() *Logger {
+	newLog := NewDefaultLog()
+	newLog.contentPrefix = l.contentPrefix
+	newLog.prefix = l.prefix
+	newLog.suffix = l.suffix
+	newLog.flag = l.flag
+	newLog.buf = make([]byte, 0)
+	newLog.buf = append(newLog.buf, l.buf...)
+	newLog.level = l.level
+	newLog.out = l.out
+	newLog.isTerminal = l.isTerminal
+	newLog.callDepth = l.callDepth
+	return newLog
+}
+
 // IncrOneCallDepth call depth add one
 func (l *Logger) IncrOneCallDepth() {
 	l.mu.Lock()

@@ -4,9 +4,17 @@ import "github.com/MDGSF/utils/log"
 
 var std = New()
 
+func Clone() *MLogger {
+	return std.Clone()
+}
+
 func AddOneLogger(logger *log.Logger) {
 	logger.IncrOneCallDepth()
 	std.loggers = append(std.loggers, logger)
+}
+
+func SetLevel(level log.Level) {
+	std.SetLevel(level)
 }
 
 // Panic is equivalent to Print() followed by a call to panic().

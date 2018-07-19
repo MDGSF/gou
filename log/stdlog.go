@@ -8,6 +8,10 @@ import (
 
 var std = New(os.Stderr, "", "", LLevel|LstdFlags|Lshortfile, VerboseLevel, IsTerminal)
 
+func Clone() *Logger {
+	return std.Clone()
+}
+
 // IncrOneCallDepth call depth add one
 func IncrOneCallDepth() {
 	std.mu.Lock()
