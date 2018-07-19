@@ -24,6 +24,8 @@ import (
 var (
 	// DefaultEvery means the clock time of recycling the expired cache items in memory.
 	DefaultEvery = 60 // 1 minute
+
+	DefaultMaxSize = 10
 )
 
 // MemoryItem store memory cache item.
@@ -45,9 +47,10 @@ func (mi *MemoryItem) isExpire() bool {
 // it contains a RW locker for safe map storage.
 type MemoryCache struct {
 	sync.RWMutex
-	dur   time.Duration
-	items map[string]*MemoryItem
-	Every int // run an expiration check Every clock time
+	dur     time.Duration
+	items   map[string]*MemoryItem
+	Every   int // run an expiration check Every clock time
+	maxSize int
 }
 
 // NewMemoryCache returns a new MemoryCache.
@@ -85,6 +88,11 @@ func (bc *MemoryCache) GetMulti(names []string) []interface{} {
 func (bc *MemoryCache) Put(name string, value interface{}, lifespan time.Duration) error {
 	bc.Lock()
 	defer bc.Unlock()
+
+	if len(bc.items) > bc.maxSize {
+		return nil
+	}
+
 	bc.items[name] = &MemoryItem{
 		val:         value,
 		createdTime: time.Now(),
@@ -203,6 +211,15 @@ func (bc *MemoryCache) GetAllKeys() []string {
 	return keys
 }
 
+func (bc *MemoryCache) Size() int {
+	bc.Lock()
+	defer bc.Unlock()
+	return len(bc.items)
+}
+
+func (bc *MemoryCache) Vacuum() {
+}
+
 // StartAndGC start memory cache. it will check expiration in every clock time.
 func (bc *MemoryCache) StartAndGC(config string) error {
 	var cf map[string]int
@@ -211,6 +228,13 @@ func (bc *MemoryCache) StartAndGC(config string) error {
 		cf = make(map[string]int)
 		cf["interval"] = DefaultEvery
 	}
+
+	if v, ok := cf["maxCacheBufferSize"]; ok {
+		bc.maxSize = v
+	} else {
+		bc.maxSize = DefaultMaxSize
+	}
+
 	dur := time.Duration(cf["interval"]) * time.Second
 	bc.Every = cf["interval"]
 	bc.dur = dur

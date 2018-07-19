@@ -67,6 +67,10 @@ type Cache interface {
 	StartAndGC(config string) error
 	// get all item's key.
 	GetAllKeys() []string
+	// get cache's size.
+	Size() int
+	// when you call delete, it may not really remove data from cache, so call Vacuum to remove it from cache.
+	Vacuum()
 }
 
 // Instance is a function create a new Cache Instance
