@@ -8,6 +8,10 @@ import (
 
 var std = New(os.Stderr, "", "", LLevel|LstdFlags|Lshortfile, VerboseLevel, IsTerminal)
 
+func DefaultLog() *Logger {
+	return std
+}
+
 func Clone() *Logger {
 	return std.Clone()
 }
