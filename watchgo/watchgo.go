@@ -9,10 +9,10 @@ type TItem struct {
 	Name        string
 	TimeoutSec  int
 	ExpiredTime int64
-	f           func()
+	f           func(item *TItem)
 }
 
-func NewItem(name string, timeoutSec int, f func()) *TItem {
+func NewItem(name string, timeoutSec int, f func(item *TItem)) *TItem {
 	item := &TItem{}
 	item.Name = name
 	item.TimeoutSec = timeoutSec
@@ -24,7 +24,7 @@ func NewItem(name string, timeoutSec int, f func()) *TItem {
 var lock sync.Mutex
 var m map[string]*TItem
 
-func Register(name string, timeoutSec int, f func()) {
+func Register(name string, timeoutSec int, f func(item *TItem)) {
 	lock.Lock()
 	defer lock.Unlock()
 	item := NewItem(name, timeoutSec, f)
@@ -46,7 +46,7 @@ func run() {
 
 		for _, item := range m {
 			if time.Now().UnixNano() > item.ExpiredTime {
-				item.f()
+				item.f(item)
 			}
 		}
 

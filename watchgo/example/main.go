@@ -9,8 +9,8 @@ import (
 )
 
 func main() {
-	watchgo.Register("watchgo", 2, func() {
-		fmt.Println("expired")
+	watchgo.Register("watchgo", 2, func(item *watchgo.TItem) {
+		fmt.Println("expired, item = ", item)
 		os.Exit(1)
 	})
 
