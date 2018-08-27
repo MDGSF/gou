@@ -27,7 +27,7 @@ func New(filename string, maxsize int) *RotateWriter {
 
 func (w *RotateWriter) createLogFile() {
 	var err error
-	w.fp, err = os.OpenFile(w.filename, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+	w.fp, err = os.OpenFile(w.filename, os.O_WRONLY|os.O_CREATE|os.O_APPEND|os.O_SYNC, 0666)
 	if err != nil {
 		log.Error("create log file [%v] failed, err = %v", w.filename, err)
 		return

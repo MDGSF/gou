@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-var std = New(os.Stderr, "", "", LLevel|LstdFlags|Lshortfile, VerboseLevel, IsTerminal)
+var std = New(os.Stdout, "", "", LLevel|LstdFlags|Lshortfile, InfoLevel, IsTerminal)
 
 func DefaultLog() *Logger {
 	return std
