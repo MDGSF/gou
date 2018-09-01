@@ -36,6 +36,30 @@ func BytesToInt32(b []byte) int {
 	return int(temp)
 }
 
+// PackUint32LE pack uint32 to []byte, in little endian.
+func PackUint32LE(num uint32) []byte {
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, num)
+	return buf.Bytes()
+}
+
+// PackUint32BE pack uint32 to []byte, in big endian.
+func PackUint32BE(num uint32) []byte {
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.BigEndian, num)
+	return buf.Bytes()
+}
+
+// UnpackUint32LE unpack []byte to uint32, in little endian.
+func UnpackUint32LE(data []byte) uint32 {
+	return binary.LittleEndian.Uint32(data)
+}
+
+// UnpackUint32LE unpack []byte to uint32, in big endian.
+func UnpackUint32BE(data []byte) uint32 {
+	return binary.BigEndian.Uint32(data)
+}
+
 // Int32ListRemove 辅助函数，用于从int32数组中移除某个整数
 func Int32ListRemove(intList []int32, element int) []int32 {
 	for i, v := range intList {
