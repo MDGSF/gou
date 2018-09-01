@@ -67,7 +67,7 @@ func New(out io.Writer, prefix string, suffix string, flag int, level Level, isT
 }
 
 func NewDefaultLog() *Logger {
-	return New(os.Stderr, "", "", LLevel|LstdFlags|Lshortfile, VerboseLevel, IsTerminal)
+	return New(os.Stdout, "", "", LLevel|LstdFlags|Lshortfile, VerboseLevel, IsTerminal)
 }
 
 func (l *Logger) Clone() *Logger {
