@@ -86,3 +86,10 @@ func Int32Distinct(intList []int32) []int32 {
 
 	return distInt32
 }
+
+// CopyMap copy src to dest
+func CopyMap(dest, src map[string]interface{}) {
+	for k := range src {
+		dest[k] = src[k]
+	}
+}
