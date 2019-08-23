@@ -98,11 +98,6 @@ func (c *TWSClient) Start() {
 	go c.run()
 }
 
-// Stop stop websocket client
-func (c *TWSClient) Stop() {
-	c.conn.Close()
-}
-
 func (c *TWSClient) run() {
 	defaultRetryToOpen := atomic.LoadInt64(&c.retryToOpen)
 	for {
