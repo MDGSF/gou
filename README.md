@@ -1,2 +1,2 @@
-# gou
-go utility
+# golang utility
+
