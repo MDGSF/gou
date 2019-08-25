@@ -9,57 +9,14 @@ import (
 	"io/ioutil"
 	"strconv"
 	"strings"
+	"sync"
 )
-
-// Line one line
-type Line struct {
-	comment string
-	key     string
-	value   string
-}
-
-// Section section
-type Section struct {
-	comment string
-	name    string
-	lines   []*Line
-}
-
-// NewSection create an section
-func NewSection(name string) *Section {
-	return &Section{
-		name:  name,
-		lines: make([]*Line, 0),
-	}
-}
-
-func (sect *Section) replaceOrCreate(key, value, comment string) {
-	line := sect.findLineByKey(key)
-	if line == nil {
-		line = &Line{
-			key:   key,
-			value: value,
-		}
-		sect.lines = append(sect.lines, line)
-	} else {
-		line.value = value
-	}
-}
-
-func (sect *Section) findLineByKey(key string) *Line {
-	for k := range sect.lines {
-		line := sect.lines[k]
-		if line.key == key {
-			return line
-		}
-	}
-	return nil
-}
 
 // Config ini config
 type Config struct {
 	sections       []*Section
 	defaultsection *Section
+	sync.RWMutex
 }
 
 // NewConfig create ini config from file
@@ -72,17 +29,17 @@ func NewConfig(filename string) (*Config, error) {
 }
 
 // NewConfigFromData create ini config from data.
-// bytes.Buffer()
-// bytes.NewReader()
-// bufio.NewReader()
 func NewConfigFromData(data []byte) (*Config, error) {
 	conf := &Config{
 		sections:       make([]*Section, 0),
 		defaultsection: NewSection(""),
+		RWMutex:        sync.RWMutex{},
 	}
+	conf.Lock()
+	defer conf.Unlock()
+
 	br := bytes.NewReader(data)
 	r := bufio.NewReader(br)
-
 	curSection := conf.defaultsection
 	var comment bytes.Buffer
 
@@ -152,6 +109,12 @@ Set set key = value
 key can be "section::key"
 */
 func (conf *Config) Set(key, value string) error {
+	conf.Lock()
+	defer conf.Unlock()
+	if len(key) == 0 {
+		return errors.New("key is empty")
+	}
+
 	var section *Section
 	var linekey string
 	if strings.Contains(key, "::") {
@@ -170,6 +133,9 @@ func (conf *Config) Set(key, value string) error {
 
 // String get string by key
 func (conf *Config) String(key string) string {
+	conf.RLock()
+	defer conf.RUnlock()
+
 	section, linekey := conf.getSectionAndKey(key)
 	if section == nil {
 		return ""
@@ -289,6 +255,9 @@ func (conf *Config) DIY(key string) (interface{}, error) {
 
 // GetSection returns map for given section
 func (conf *Config) GetSection(sectionName string) (map[string]string, error) {
+	conf.RLock()
+	defer conf.RUnlock()
+
 	section := conf.findSection(sectionName)
 	if section == nil {
 		return nil, errors.New("Not exist section")
@@ -341,6 +310,9 @@ func (conf *Config) addOneSection(section *Section) {
 
 // FormatBeauty format beauty style
 func (conf *Config) FormatBeauty() []byte {
+	conf.RLock()
+	defer conf.RUnlock()
+
 	buf := bytes.NewBufferString("")
 
 	if len(conf.defaultsection.comment) > 0 {
@@ -373,4 +345,55 @@ func (conf *Config) FormatBeauty() []byte {
 		buf.WriteByte('\n')
 	}
 	return buf.Bytes()
+}
+
+// ---------------------------------------------------
+
+// Line one line
+type Line struct {
+	comment string
+	key     string
+	value   string
+}
+
+// ---------------------------------------------------
+
+// Section section
+type Section struct {
+	comment string
+	name    string
+	lines   []*Line
+}
+
+// NewSection create an section
+func NewSection(name string) *Section {
+	return &Section{
+		name:  name,
+		lines: make([]*Line, 0),
+	}
+}
+
+func (sect *Section) replaceOrCreate(key, value, comment string) {
+	line := sect.findLineByKey(key)
+	if line == nil {
+		line = &Line{
+			key:     key,
+			value:   value,
+			comment: comment,
+		}
+		sect.lines = append(sect.lines, line)
+	} else {
+		line.value = value
+		line.comment = comment
+	}
+}
+
+func (sect *Section) findLineByKey(key string) *Line {
+	for k := range sect.lines {
+		line := sect.lines[k]
+		if line.key == key {
+			return line
+		}
+	}
+	return nil
 }
