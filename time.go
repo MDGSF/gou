@@ -35,12 +35,12 @@ func TimeNowSecond() int64 {
 
 // TimeNowMilliSecond now millisecond.
 func TimeNowMilliSecond() int64 {
-	return time.Now().UnixNano() / time.Millisecond
+	return time.Now().UnixNano() / int64(time.Millisecond)
 }
 
 // TimeNowMicroSecond now microsecond.
 func TimeNowMicroSecond() int64 {
-	return time.Now().UnixNano() / time.Microsecond
+	return time.Now().UnixNano() / int64(time.Microsecond)
 }
 
 // TimeNowNonoSecond now nanosecond.
