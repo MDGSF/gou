@@ -1,5 +1,6 @@
 package utils
 
+// IsStringWildCardMatchArray 在数组 array 中查找字符串 s，用通配符匹配。
 func IsStringWildCardMatchArray(s string, array []string) bool {
 	for _, item := range array {
 		if WildCardMatch(item, s) {
@@ -9,6 +10,23 @@ func IsStringWildCardMatchArray(s string, array []string) bool {
 	return false
 }
 
+/*
+WildCardMatch 通配符匹配字符串
+?: 匹配 0 个或者 1 个字符
+*: 匹配 0 个，1 个或者任意多个字符
++: 匹配 1 个字符或者任意个字符，也就是至少 1 个字符
+
+WildCardMatch("a?c", "abc") == true
+WildCardMatch("a?c", "ac") == true
+
+WildCardMatch("a*c", "ac") == true
+WildCardMatch("a*c", "abc") == true
+WildCardMatch("a*c", "abbbc") == true
+
+WildCardMatch("a+c", "ac") == false
+WildCardMatch("a+c", "abc") == true
+WildCardMatch("a+c", "abbbc") == true
+*/
 func WildCardMatch(pattern string, name string) bool {
 	if len(pattern) == 0 {
 		return pattern == name

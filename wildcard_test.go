@@ -128,6 +128,49 @@ func TestWildCardMatch_11(t *testing.T) {
 	assert.Equal(t, result, true)
 }
 
+func TestWildCardMatch_12(t *testing.T) {
+	pattern := "a?c"
+	name := "abc"
+	result := WildCardMatch(pattern, name)
+	assert.Equal(t, result, true)
+
+	pattern = "a?c"
+	name = "ac"
+	result = WildCardMatch(pattern, name)
+	assert.Equal(t, result, true)
+
+	pattern = "a*c"
+	name = "ac"
+	result = WildCardMatch(pattern, name)
+	assert.Equal(t, result, true)
+
+	pattern = "a*c"
+	name = "abc"
+	result = WildCardMatch(pattern, name)
+	assert.Equal(t, result, true)
+
+	pattern = "a*c"
+	name = "abbbc"
+	result = WildCardMatch(pattern, name)
+	assert.Equal(t, result, true)
+
+	pattern = "a+c"
+	name = "ac"
+	result = WildCardMatch(pattern, name)
+	assert.Equal(t, result, false)
+
+	pattern = "a+c"
+	name = "abc"
+	result = WildCardMatch(pattern, name)
+	assert.Equal(t, result, true)
+
+	pattern = "a+c"
+	name = "abbbc"
+	result = WildCardMatch(pattern, name)
+	assert.Equal(t, result, true)
+
+}
+
 func TestWildCardMatch_array_1(t *testing.T) {
 	s := "aaa"
 	array := []string{"aa", "bb"}
