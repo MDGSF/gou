@@ -23,6 +23,8 @@
 // Provides leaky buffer, based on the example in Effective Go.
 package utils
 
+import "fmt"
+
 type LeakyBuf struct {
 	bufSize  int // size of each buffer
 	freeList chan []byte
@@ -57,7 +59,7 @@ func (lb *LeakyBuf) Get() (b []byte) {
 // error usage of leaky buffer.
 func (lb *LeakyBuf) Put(b []byte) {
 	if len(b) != lb.bufSize {
-		panic("invalid buffer size that's put into leaky buffer")
+		panic(fmt.Sprintf("invalid buffer size that's put into leaky buffer, %v, %v", len(b), lb.bufSize))
 	}
 	select {
 	case lb.freeList <- b:

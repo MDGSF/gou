@@ -21,3 +21,31 @@
 // SOFTWARE.
 
 package utils
+
+import "testing"
+
+func TestLeakyBuf1(t *testing.T) {
+	b := GLeakyBuf.Get()
+	if len(b) != leakyBufSize {
+		t.Fatal(len(b), leakyBufSize)
+	}
+
+	GLeakyBuf.Put(b)
+}
+
+func TestLeakyBuf2(t *testing.T) {
+	buf := NewLeakyBuf(1, 2)
+	b := buf.Get()
+	if len(b) != 2 {
+		t.Fatal(len(b))
+	}
+
+	buf.Put(b)
+
+	b = buf.Get()
+	if len(b) != 2 {
+		t.Fatal(len(b))
+	}
+
+	buf.Put(b)
+}
