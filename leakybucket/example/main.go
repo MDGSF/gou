@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	".."
+	"github.com/MDGSF/utils/leakybucket"
 )
 
 /*
