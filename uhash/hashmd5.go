@@ -14,3 +14,8 @@ func MD5(data []byte) (digest string, err error) {
 	digest = hex.EncodeToString(hasher.Sum(nil))
 	return
 }
+
+// MD5String calculate md5 for str
+func MD5String(str string) (digest string, err error) {
+	return MD5([]byte(str))
+}
