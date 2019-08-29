@@ -24,7 +24,8 @@ package utils
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
+	"reflect"
 	"strconv"
 )
 
@@ -75,66 +76,32 @@ func StringToInt(str string) int {
 	return int(val)
 }
 
-// InterfaceToInt change interface to number.
-func InterfaceToInt(arg interface{}) (num int, err error) {
-	switch val := arg.(type) {
-	case uint8:
-		num = int(val)
-	case uint16:
-		num = int(val)
-	case uint32:
-		num = int(val)
-	case uint64:
-		num = int(val)
-	case int8:
-		num = int(val)
-	case int16:
-		num = int(val)
-	case int32:
-		num = int(val)
-	case int64:
-		num = int(val)
-	case uint:
-		num = int(val)
-	case int:
-		num = val
+// ToInt change interface to number.
+func ToInt(value interface{}) (num int, err error) {
+	val := reflect.ValueOf(value)
+	switch value.(type) {
+	case int, int8, int16, int32, int64:
+		num = int(val.Int())
+	case uint, uint8, uint16, uint32, uint64:
+		num = int(val.Uint())
 	default:
-		err = errors.New("incompatible type")
+		err = fmt.Errorf("ToInt need numeric not `%T`", value)
 	}
-
 	return
 }
 
-// InterfaceToInt64 change interface to int64.
-func InterfaceToInt64(arg interface{}) (num int64, err error) {
-	switch val := arg.(type) {
-	case uint8:
-		num = int64(val)
-	case uint16:
-		num = int64(val)
-	case uint32:
-		num = int64(val)
-	case uint64:
-		num = int64(val)
-	case int8:
-		num = int64(val)
-	case int16:
-		num = int64(val)
-	case int32:
-		num = int64(val)
-	case int64:
-		num = int64(val)
-	case uint:
-		num = int64(val)
-	case int:
-		num = int64(val)
-	case float32:
-		num = int64(val)
-	case float64:
-		num = int64(val)
+// ToInt64 change interface to int64.
+func ToInt64(value interface{}) (num int64, err error) {
+	val := reflect.ValueOf(value)
+	switch value.(type) {
+	case int, int8, int16, int32, int64:
+		num = val.Int()
+	case uint, uint8, uint16, uint32, uint64:
+		num = int64(val.Uint())
+	case float32, float64:
+		num = int64(val.Float())
 	default:
-		err = errors.New("incompatible type")
+		err = fmt.Errorf("ToInt64 need numeric not `%T`", value)
 	}
-
 	return
 }

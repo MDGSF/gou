@@ -88,84 +88,84 @@ func TestStringToFloat64(t *testing.T) {
 func TestInterfaceToInt(t *testing.T) {
 	var num int
 	var err error
-	num, err = InterfaceToInt("123")
+	num, err = ToInt("123")
 	if err == nil {
 		t.Errorf("StringToUint32 failed, err = %v", err)
 	}
 
-	num, err = InterfaceToInt(uint8(123))
+	num, err = ToInt(uint8(123))
 	assert.Equal(t, 123, num, "they should be equal")
 
-	num, err = InterfaceToInt(uint16(123))
+	num, err = ToInt(uint16(123))
 	assert.Equal(t, 123, num, "they should be equal")
 
-	num, err = InterfaceToInt(uint32(123))
+	num, err = ToInt(uint32(123))
 	assert.Equal(t, 123, num, "they should be equal")
 
-	num, err = InterfaceToInt(uint64(123))
+	num, err = ToInt(uint64(123))
 	assert.Equal(t, 123, num, "they should be equal")
 
-	num, err = InterfaceToInt(int8(123))
+	num, err = ToInt(int8(123))
 	assert.Equal(t, 123, num, "they should be equal")
 
-	num, err = InterfaceToInt(int16(123))
+	num, err = ToInt(int16(123))
 	assert.Equal(t, 123, num, "they should be equal")
 
-	num, err = InterfaceToInt(int32(123))
+	num, err = ToInt(int32(123))
 	assert.Equal(t, 123, num, "they should be equal")
 
-	num, err = InterfaceToInt(int64(123))
+	num, err = ToInt(int64(123))
 	assert.Equal(t, 123, num, "they should be equal")
 
-	num, err = InterfaceToInt(int(123))
+	num, err = ToInt(int(123))
 	assert.Equal(t, 123, num, "they should be equal")
 
-	num, err = InterfaceToInt(uint(123))
+	num, err = ToInt(uint(123))
 	assert.Equal(t, 123, num, "they should be equal")
 }
 
 func TestInterfaceToInt64(t *testing.T) {
 	var num int64
 	var err error
-	num, err = InterfaceToInt64("123")
+	num, err = ToInt64("123")
 	if err == nil {
 		t.Errorf("StringToUint32 failed, err = %v", err)
 	}
 
-	num, err = InterfaceToInt64(uint8(123))
+	num, err = ToInt64(uint8(123))
 	assert.Equal(t, int64(123), num, "they should be equal")
 
-	num, err = InterfaceToInt64(uint16(123))
+	num, err = ToInt64(uint16(123))
 	assert.Equal(t, int64(123), num, "they should be equal")
 
-	num, err = InterfaceToInt64(uint32(123))
+	num, err = ToInt64(uint32(123))
 	assert.Equal(t, int64(123), num, "they should be equal")
 
-	num, err = InterfaceToInt64(uint64(123))
+	num, err = ToInt64(uint64(123))
 	assert.Equal(t, int64(123), num, "they should be equal")
 
-	num, err = InterfaceToInt64(int8(123))
+	num, err = ToInt64(int8(123))
 	assert.Equal(t, int64(123), num, "they should be equal")
 
-	num, err = InterfaceToInt64(int16(123))
+	num, err = ToInt64(int16(123))
 	assert.Equal(t, int64(123), num, "they should be equal")
 
-	num, err = InterfaceToInt64(int32(123))
+	num, err = ToInt64(int32(123))
 	assert.Equal(t, int64(123), num, "they should be equal")
 
-	num, err = InterfaceToInt64(int64(123))
+	num, err = ToInt64(int64(123))
 	assert.Equal(t, int64(123), num, "they should be equal")
 
-	num, err = InterfaceToInt64(int(123))
+	num, err = ToInt64(int(123))
 	assert.Equal(t, int64(123), num, "they should be equal")
 
-	num, err = InterfaceToInt64(uint(123))
+	num, err = ToInt64(uint(123))
 	assert.Equal(t, int64(123), num, "they should be equal")
 
-	num, err = InterfaceToInt64(float32(123.00))
+	num, err = ToInt64(float32(123.00))
 	assert.Equal(t, int64(123), num, "they should be equal")
 
-	num, err = InterfaceToInt64(float64(123))
+	num, err = ToInt64(float64(123))
 	assert.Equal(t, int64(123), num, "they should be equal")
 
 }
