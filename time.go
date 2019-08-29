@@ -26,6 +26,22 @@ import (
 	"time"
 )
 
+const (
+	NanoPerMicro  = 1000
+	NanoPerMilli  = 1000 * NanoPerMicro
+	NanoPerSecond = 1000 * NanoPerMilli
+
+	MicroPerMilli  = 1000
+	MicroPerSecond = 1000 * MicroPerMilli
+
+	MilliPerSecond = 1000
+
+	SecondsPerMinute = 60
+	SecondsPerHour   = 60 * SecondsPerMinute
+	SecondsPerDay    = 24 * SecondsPerHour
+	SecondsPerWeek   = 7 * SecondsPerDay
+)
+
 // MakeTimeFromSeconds construct one time.Time from second
 func MakeTimeFromSeconds(sec int64) time.Time {
 	return time.Unix(sec, 0)
@@ -33,15 +49,15 @@ func MakeTimeFromSeconds(sec int64) time.Time {
 
 // MakeTimeFromMilliSeconds construct one time.Time from milli second
 func MakeTimeFromMilliSeconds(msec int64) time.Time {
-	sec := msec / 1000
-	nsec := msec % 1000 * 1000000
+	sec := msec / MilliPerSecond
+	nsec := msec % MilliPerSecond * NanoPerMilli
 	return time.Unix(sec, nsec)
 }
 
 // MakeTimeFromMicroSeconds construct one time.Time from micro second
 func MakeTimeFromMicroSeconds(usec int64) time.Time {
-	sec := usec / 1000000
-	nsec := usec % 1000000 * 1000
+	sec := usec / MicroPerSecond
+	nsec := usec % MicroPerSecond * NanoPerMicro
 	return time.Unix(sec, nsec)
 }
 
