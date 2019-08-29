@@ -8,3 +8,9 @@ bytes.NewReader()
 bufio.NewReader()
 ```
 
+### seperator in code
+
+```
+// ---------------------------------------------------
+```
+
