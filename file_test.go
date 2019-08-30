@@ -22,7 +22,11 @@
 
 package utils
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestIsFile(t *testing.T) {
 	if !IsFile("/proc/cpuinfo") {
@@ -34,4 +38,12 @@ func TestIsDir(t *testing.T) {
 	if !IsDir("/tmp") {
 		t.FailNow()
 	}
+}
+
+func TestPathExists(t *testing.T) {
+	var exist bool
+	var err error
+	exist, err = PathExists("file.go")
+	assert.Equal(t, true, exist, "they should be equal")
+	assert.Equal(t, nil, err, "they should be equal")
 }

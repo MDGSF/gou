@@ -41,3 +41,21 @@ func IsDir(path string) bool {
 	}
 	return fileInfo.Mode().IsDir()
 }
+
+/*
+PathExists judge whether file or directory exists.
+return:
+	true, nil : exist.
+	false, nil: not exist.
+	false, err: I don't know.
+*/
+func PathExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
+}
