@@ -27,6 +27,54 @@ import (
 	"encoding/binary"
 )
 
+func LUint16(b []byte) uint16 {
+	return binary.LittleEndian.Uint16(b)
+}
+
+func LPutUint16(b []byte, v uint16) {
+	binary.LittleEndian.PutUint16(b, v)
+}
+
+func LUint32(b []byte) uint32 {
+	return binary.LittleEndian.Uint32(b)
+}
+
+func LPutUint32(b []byte, v uint32) {
+	binary.LittleEndian.PutUint32(b, v)
+}
+
+func LUint64(b []byte) uint64 {
+	return binary.LittleEndian.Uint64(b)
+}
+
+func LPutUint64(b []byte, v uint64) {
+	binary.LittleEndian.PutUint64(b, v)
+}
+
+func BUint16(b []byte) uint16 {
+	return binary.BigEndian.Uint16(b)
+}
+
+func BPutUint16(b []byte, v uint16) {
+	binary.BigEndian.PutUint16(b, v)
+}
+
+func BUint32(b []byte) uint32 {
+	return binary.BigEndian.Uint32(b)
+}
+
+func BPutUint32(b []byte, v uint32) {
+	binary.BigEndian.PutUint32(b, v)
+}
+
+func BUint64(b []byte) uint64 {
+	return binary.BigEndian.Uint64(b)
+}
+
+func BPutUint64(b []byte, v uint64) {
+	binary.BigEndian.PutUint64(b, v)
+}
+
 // PackUint32LE pack uint32 to []byte, in little endian.
 func PackUint32LE(num uint32) []byte {
 	buf := new(bytes.Buffer)
