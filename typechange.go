@@ -41,10 +41,20 @@ func StringToUint32(str string) uint32 {
 	return uint32(val)
 }
 
+// Uint64ToString convert uint64 to string
+func Uint64ToString(num uint64) string {
+	return strconv.FormatUint(num, 10)
+}
+
 // StringToUint64 convert string to uint64
 func StringToUint64(str string) uint64 {
 	val, _ := strconv.ParseUint(str, 10, 64)
 	return val
+}
+
+// Int64ToString convert int64 to string
+func Int64ToString(num int64) string {
+	return strconv.FormatInt(num, 10)
 }
 
 // StringToInt64 convert string to int64
