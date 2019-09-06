@@ -285,6 +285,15 @@ func (c *TWSClient) doWriting(wg *sync.WaitGroup) {
 	}
 }
 
+// SendBinaryBlock send binary data
+func (c *TWSClient) SendBinaryBlock(data []byte) error {
+	if !c.IsOnline() {
+		return fmt.Errorf("offline")
+	}
+	c.outBinaryChan <- data
+	return nil
+}
+
 // SendBinary send binary data
 func (c *TWSClient) SendBinary(data []byte) error {
 	if !c.IsOnline() {
@@ -313,6 +322,15 @@ func (c *TWSClient) SendBinaryWithTimeout(data []byte, d time.Duration) error {
 	return nil
 }
 
+// SendTextBlock send text data
+func (c *TWSClient) SendTextBlock(data []byte) error {
+	if !c.IsOnline() {
+		return fmt.Errorf("[%s] offline", c.serverName)
+	}
+	c.outTextChan <- data
+	return nil
+}
+
 // SendText send text data
 func (c *TWSClient) SendText(data []byte) error {
 	if !c.IsOnline() {
@@ -338,6 +356,21 @@ func (c *TWSClient) SendTextWithTimeout(data []byte, d time.Duration) error {
 	case <-time.After(d):
 		return fmt.Errorf("text channel is full, send text time out, drop message")
 	}
+	return nil
+}
+
+// SendJSONBlock send json data
+func (c *TWSClient) SendJSONBlock(v interface{}) error {
+	if !c.IsOnline() {
+		return fmt.Errorf("offline")
+	}
+
+	data, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	c.outTextChan <- data
 	return nil
 }
 

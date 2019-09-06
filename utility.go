@@ -36,6 +36,11 @@ func Max(a, b int) int {
 	return b
 }
 
+// IsPowerOfTwo judege whether x is 2^n
+func IsPowerOfTwo(x int) bool {
+	return x&(x-1) == 0
+}
+
 // CopyMap copy src to dest
 func CopyMap(dest, src map[string]interface{}) {
 	for k := range src {
