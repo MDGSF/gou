@@ -21,20 +21,3 @@
 // SOFTWARE.
 
 package utils
-
-import (
-	"testing"
-
-	"github.com/stretchr/testify/assert"
-)
-
-func TestIsPowerOfTwo(t *testing.T) {
-	assert.Equal(t, IsPowerOfTwo(1), true)
-	assert.Equal(t, IsPowerOfTwo(2), true)
-	assert.Equal(t, IsPowerOfTwo(3), false)
-	assert.Equal(t, IsPowerOfTwo(4), true)
-	assert.Equal(t, IsPowerOfTwo(5), false)
-	assert.Equal(t, IsPowerOfTwo(6), false)
-	assert.Equal(t, IsPowerOfTwo(7), false)
-	assert.Equal(t, IsPowerOfTwo(8), true)
-}
