@@ -22,7 +22,21 @@
 
 package utils
 
-import "os"
+import (
+	"os"
+	"path/filepath"
+)
+
+// SelfPath gets compiled executable file absolute path
+func SelfPath() string {
+	path, _ := filepath.Abs(os.Args[0])
+	return path
+}
+
+// SelfDir gets compiled executable file directory
+func SelfDir() string {
+	return filepath.Dir(SelfPath())
+}
 
 // IsFile check path is file or not.
 func IsFile(path string) bool {

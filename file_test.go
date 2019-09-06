@@ -28,6 +28,19 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestSelfPath(t *testing.T) {
+	path := SelfPath()
+	if path == "" {
+		t.Error("path cannot be empty")
+	}
+	t.Logf("SelfPath: %s", path)
+}
+
+func TestSelfDir(t *testing.T) {
+	dir := SelfDir()
+	t.Logf("SelfDir: %s", dir)
+}
+
 func TestIsFile(t *testing.T) {
 	if !IsFile("/proc/cpuinfo") {
 		t.FailNow()
