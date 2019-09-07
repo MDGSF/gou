@@ -60,3 +60,8 @@ func TestPathExists(t *testing.T) {
 	assert.Equal(t, true, exist, "they should be equal")
 	assert.Equal(t, nil, err, "they should be equal")
 }
+
+func TestFileExists(t *testing.T) {
+	exist := FileExists("file.go")
+	assert.Equal(t, true, exist, "they should be equal")
+}

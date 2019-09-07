@@ -73,3 +73,13 @@ func PathExists(path string) (bool, error) {
 	}
 	return true, nil
 }
+
+// FileExists judge whether file or directory exists.
+func FileExists(path string) bool {
+	if _, err := os.Stat(path); err != nil {
+		if os.IsNotExist(err) {
+			return false
+		}
+	}
+	return true
+}
