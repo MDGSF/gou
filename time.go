@@ -30,11 +30,23 @@ const (
 	NanoPerMicro  = 1000
 	NanoPerMilli  = 1000 * NanoPerMicro
 	NanoPerSecond = 1000 * NanoPerMilli
+	NanoPerMinute = 60 * NanoPerSecond
+	NanoPerHour   = 60 * NanoPerMinute
+	NanoPerDay    = 24 * NanoPerHour
+	NanoPerWeek   = 7 * NanoPerDay
 
 	MicroPerMilli  = 1000
 	MicroPerSecond = 1000 * MicroPerMilli
+	MicroPerMinute = 60 * MicroPerSecond
+	MicroPerHour   = 60 * MicroPerMinute
+	MicroPerDay    = 24 * MicroPerHour
+	MicroPerWeek   = 7 * MicroPerDay
 
 	MilliPerSecond = 1000
+	MilliPerMinute = 60 * MilliPerSecond
+	MilliPerHour   = 60 * MilliPerMinute
+	MilliPerDay    = 24 * MilliPerHour
+	MilliPerWeek   = 7 * MilliPerDay
 
 	SecondsPerMinute = 60
 	SecondsPerHour   = 60 * SecondsPerMinute
