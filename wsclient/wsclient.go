@@ -82,6 +82,7 @@ type TWSClient struct {
 	outBinaryChan chan []byte
 	outTextChan   chan []byte
 
+	header        http.Header
 	retryToOpen   int64
 	handshakeWait int64
 	writeWait     int64
@@ -142,6 +143,13 @@ func (c *TWSClient) open() bool {
 	for i, addr := range c.serverAddrs {
 		header := http.Header{}
 		header.Set("Host", addr.Name)
+
+		for key := range c.header {
+			vals := c.header[key]
+			for _, val := range vals {
+				header.Add(key, val)
+			}
+		}
 
 		tlsConfig := &tls.Config{}
 		tlsConfig.ServerName = addr.Name
@@ -441,4 +449,9 @@ func (c *TWSClient) SetTimeoutRead(d time.Duration) {
 // c.pingPeriod must be smaller than c.pongWait
 func (c *TWSClient) SetTimeOutPing(t int64) {
 	atomic.StoreInt64(&c.pingPeriod, t*int64(time.Second))
+}
+
+// AddHeader add http header
+func (c *TWSClient) AddHeader(header http.Header) {
+	c.header = header
 }
