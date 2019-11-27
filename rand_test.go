@@ -55,3 +55,25 @@ func TestGetRandomString(t *testing.T) {
 		t.Fatal(ret)
 	}
 }
+
+func TestNewRandString(t *testing.T) {
+	ret := NewRandString("0123456789", -1)
+	if ret != "" {
+		t.Fatal(ret)
+	}
+
+	ret = NewRandString("0123456789", 0)
+	if ret != "" {
+		t.Fatal(ret)
+	}
+
+	ret = NewRandString("0123456789", 1)
+	if len(ret) != 1 {
+		t.Fatal(ret)
+	}
+
+	ret = NewRandString("0123456789", 6)
+	if len(ret) != 6 {
+		t.Fatal(ret)
+	}
+}

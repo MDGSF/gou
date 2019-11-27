@@ -64,3 +64,8 @@ func GetRandomBytes(n int, alphabets ...byte) []byte {
 func GetRandomString(n int, alphabets ...byte) string {
 	return string(GetRandomBytes(n, alphabets...))
 }
+
+// NewRandString generate random string
+func NewRandString(alphabets string, length int) string {
+	return string(GetRandomBytes(length, []byte(alphabets)...))
+}
