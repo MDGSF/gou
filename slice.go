@@ -61,3 +61,13 @@ func Int32Distinct(intList []int32) []int32 {
 
 	return distInt32
 }
+
+// IsStringInArray is str in array
+func IsStringInArray(str string, array []string) bool {
+	for _, s := range array {
+		if s == str {
+			return true
+		}
+	}
+	return false
+}
