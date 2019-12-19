@@ -30,6 +30,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"hash"
+	"io/ioutil"
 	"strings"
 
 	"golang.org/x/crypto/sha3"
@@ -62,4 +63,13 @@ func GetDataDigest(data []byte, algo string) (digest string, err error) {
 	hasher.Write(data)
 	digest = hex.EncodeToString(hasher.Sum(nil))
 	return
+}
+
+// GetFileDigest Returns the hex digest of a file.
+func GetFileDigest(filename, algo string) (digest string, err error) {
+	content, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return
+	}
+	return GetDataDigest(content, algo)
 }
