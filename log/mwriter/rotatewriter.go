@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -51,6 +52,12 @@ func (w *RotateWriter) autoClean() {
 
 func (w *RotateWriter) cleanExpiredFile() {
 
+	curTime := time.Now()
+	if curTime.Year() < 2020 {
+		log.Error("invalid current time: %v", curTime)
+		return
+	}
+
 	logdir := filepath.Dir(w.filename)
 	fileBaseName := filepath.Base(w.filename)
 
@@ -76,8 +83,13 @@ func (w *RotateWriter) cleanExpiredFile() {
 				continue
 			}
 
-			dura := time.Now().Sub(fileTimeStamp)
-			if dura <= 0 || dura > w.maxFileDuration {
+			dura := curTime.Sub(fileTimeStamp)
+			if dura <= 0 {
+				log.Warn("invalid time: curTime = %v, filename = %v",
+					curTime, filename)
+				continue
+			}
+			if dura > w.maxFileDuration {
 				fileAbsolutePath := filepath.Join(logdir, filename)
 				os.Remove(fileAbsolutePath)
 				log.Info("remove expired log file: %v", fileAbsolutePath)
@@ -102,6 +114,20 @@ func (w *RotateWriter) createLogFile() {
 		log.Error("create log file [%v] failed, err = %v", w.filename, err)
 		return
 	}
+
+	headMetaData := []byte(fmt.Sprintf("processID = %v\n", os.Getpid()))
+	w.fp.Write(headMetaData)
+
+	cmd := exec.Command("uptime")
+	uptimeOutput, err = cmd.CombinedOutput()
+	if err != nil {
+		log.Error("get uptime failed")
+	} else {
+		w.fp.Write(uptimeOutput)
+		w.fp.Write([]byte("\n"))
+	}
+
+	w.fp.Write([]byte("\n"))
 }
 
 // Write satisfies the io.Writer interface.
