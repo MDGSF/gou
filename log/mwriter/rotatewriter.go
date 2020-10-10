@@ -1,6 +1,7 @@
 package mwriter
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -31,6 +32,9 @@ func New(filename string, maxsize int, maxFileDuration time.Duration) *RotateWri
 	if maxsize <= 0 {
 		panic(fmt.Sprintf("invalid maxsize (%v)", maxsize))
 	}
+
+	logdir := filepath.Dir(filename)
+	os.MkdirAll(logdir, 0644)
 
 	w := &RotateWriter{
 		filename:        filename,
@@ -89,6 +93,11 @@ func (w *RotateWriter) cleanExpiredFile() {
 					curTime, filename)
 				continue
 			}
+			if dura > 365*24*time.Hour {
+				log.Warn("invalid time: curTime = %v, filename = %v",
+					curTime, filename)
+				continue
+			}
 			if dura > w.maxFileDuration {
 				fileAbsolutePath := filepath.Join(logdir, filename)
 				os.Remove(fileAbsolutePath)
@@ -115,15 +124,16 @@ func (w *RotateWriter) createLogFile() {
 		return
 	}
 
-	headMetaData := []byte(fmt.Sprintf("processID = %v\n", os.Getpid()))
+	headMetaData := []byte(fmt.Sprintf("ProcessID: %v\n", os.Getpid()))
 	w.fp.Write(headMetaData)
 
 	cmd := exec.Command("uptime")
-	uptimeOutput, err = cmd.CombinedOutput()
+	uptimeOutput, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Error("get uptime failed")
 	} else {
-		w.fp.Write(uptimeOutput)
+		w.fp.Write([]byte("uptime: "))
+		w.fp.Write(bytes.TrimSpace(uptimeOutput))
 		w.fp.Write([]byte("\n"))
 	}
 
